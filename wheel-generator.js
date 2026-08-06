@@ -24,7 +24,7 @@ export async function generateWheelGIF(choices, options = {}) {
   // Random final rotation
   const totalRotation = (spinRevolutions * 2 * Math.PI) + Math.random() * Math.PI * 2;
 
-  // Calculate which slice lands under the top pointer
+  // Calculate winner under the top pointer
   let angle = (-Math.PI / 2 - (totalRotation % (Math.PI * 2))) % (Math.PI * 2);
   if (angle < 0) angle += Math.PI * 2;
   const winnerIndex = Math.floor(angle / sliceAngle) % choices.length;
@@ -81,24 +81,34 @@ export async function generateWheelGIF(choices, options = {}) {
       ctx.fillStyle = COLORS[i % COLORS.length];
       ctx.fill();
       ctx.strokeStyle = '#d4a017';
-      ctx.lineWidth = 1.8;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
       // Text
       ctx.save();
       ctx.rotate(start + sliceAngle / 2);
-      ctx.textAlign = 'right';
+      ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.font = `bold 15px Georgia, serif`;
+
+      // Better font size for few choices
+      let fontSize = 16;
+      if (choices.length <= 3) fontSize = 22;
+      else if (choices.length <= 5) fontSize = 18;
+      else fontSize = 15;
+
+      ctx.font = `bold ${fontSize}px Georgia, serif`;
 
       let name = choices[i];
-      if (name.length > 12) name = name.slice(0, 11) + '…';
+      if (name.length > 14) name = name.slice(0, 13) + '…';
 
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 3.5;
-      ctx.strokeText(name, radius - 16, 0);
+      // Draw text closer to the edge
+      const textRadius = radius * 0.65;
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 4;
+      ctx.strokeText(name, textRadius, 0);
       ctx.fillStyle = '#f5e6c8';
-      ctx.fillText(name, radius - 16, 0);
+      ctx.fillText(name, textRadius, 0);
       ctx.restore();
     }
 
