@@ -5,9 +5,9 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Register font
+// 注册中文字体
 try {
-  GlobalFonts.registerFromPath(join(__dirname, 'Roboto-Bold.ttf'), 'Roboto');
+  GlobalFonts.registerFromPath(join(__dirname, 'NotoSansSC-Bold.otf'), 'NotoSansSC');
 } catch (e) {
   console.log('Font register failed:', e.message);
 }
@@ -100,14 +100,14 @@ export async function generateWheelGIF(choices, options = {}) {
       ctx.textBaseline = 'middle';
 
       let fontSize = 18;
-      if (choices.length <= 2) fontSize = 28;
-      else if (choices.length === 3) fontSize = 24;
-      else if (choices.length <= 5) fontSize = 20;
+      if (choices.length <= 2) fontSize = 26;
+      else if (choices.length === 3) fontSize = 22;
+      else if (choices.length <= 5) fontSize = 19;
 
-      ctx.font = `bold ${fontSize}px Roboto`;
+      ctx.font = `bold ${fontSize}px NotoSansSC`;
 
       let text = choices[i];
-      if (text.length > 12) text = text.substring(0, 11) + '…';
+      if (text.length > 10) text = text.substring(0, 9) + '…';
 
       const textX = radius - 22;
 
