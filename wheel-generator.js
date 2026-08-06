@@ -1,5 +1,16 @@
-import { createCanvas } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 import GIFEncoder from 'gif-encoder-2';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+// Register font
+try {
+  GlobalFonts.registerFromPath(join(__dirname, 'Roboto-Bold.ttf'), 'Roboto');
+} catch (e) {
+  console.log('Font register failed:', e.message);
+}
 
 const COLORS = [
   '#1e3a5f', '#2c5282', '#243b55', '#1a365d',
@@ -93,7 +104,7 @@ export async function generateWheelGIF(choices, options = {}) {
       else if (choices.length === 3) fontSize = 24;
       else if (choices.length <= 5) fontSize = 20;
 
-      ctx.font = `bold ${fontSize}px "DejaVu Sans"`;
+      ctx.font = `bold ${fontSize}px Roboto`;
 
       let text = choices[i];
       if (text.length > 12) text = text.substring(0, 11) + '…';
