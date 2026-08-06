@@ -93,14 +93,14 @@ export async function generateWheelGIF(choices, options = {}) {
       else if (choices.length === 3) fontSize = 24;
       else if (choices.length <= 5) fontSize = 20;
 
-      ctx.font = `bold ${fontSize}px sans-serif`;
+      ctx.font = `bold ${fontSize}px "DejaVu Sans"`;
 
       let text = choices[i];
       if (text.length > 12) text = text.substring(0, 11) + '…';
 
       const textX = radius - 22;
 
-      // Background for text (makes it much more visible)
+      // Text background
       const metrics = ctx.measureText(text);
       const padding = 6;
       ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
