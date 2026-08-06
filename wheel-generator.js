@@ -21,10 +21,8 @@ export async function generateWheelGIF(choices, options = {}) {
   const radius = Math.min(width, height) / 2 - 42;
   const sliceAngle = (2 * Math.PI) / choices.length;
 
-  // Random final rotation
   const totalRotation = (spinRevolutions * 2 * Math.PI) + Math.random() * Math.PI * 2;
 
-  // Calculate which slice is under the pointer at the end
   let finalAngle = (totalRotation % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
   let normalized = (Math.PI * 1.5 - finalAngle + Math.PI * 2) % (Math.PI * 2);
   const winnerIndex = Math.floor(normalized / sliceAngle) % choices.length;
@@ -64,7 +62,7 @@ export async function generateWheelGIF(choices, options = {}) {
     ctx.lineWidth = 4;
     ctx.stroke();
 
-    // ===== Draw the wheel =====
+    // Wheel
     ctx.save();
     ctx.translate(centerX, centerY);
     ctx.rotate(rotation);
@@ -84,34 +82,46 @@ export async function generateWheelGIF(choices, options = {}) {
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // ===== Text (classic method) =====
+      // Text
       ctx.save();
       ctx.rotate(startAngle + sliceAngle / 2);
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
 
-      // Font size based on number of choices
-      let fontSize = 17;
-      if (choices.length <= 2) fontSize = 26;
-      else if (choices.length === 3) fontSize = 22;
-      else if (choices.length <= 5) fontSize = 18;
+      let fontSize = 18;
+      if (choices.length <= 2) fontSize = 28;
+      else if (choices.length === 3) fontSize = 24;
+      else if (choices.length <= 5) fontSize = 20;
 
-      ctx.font = `bold ${fontSize}px Arial`;
+      ctx.font = `bold ${fontSize}px sans-serif`;
 
       let text = choices[i];
       if (text.length > 12) text = text.substring(0, 11) + '…';
 
-      // Draw text
+      const textX = radius - 22;
+
+      // Background for text (makes it much more visible)
+      const metrics = ctx.measureText(text);
+      const padding = 6;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+      ctx.fillRect(
+        textX - metrics.width - padding,
+        -fontSize / 2 - padding / 2,
+        metrics.width + padding * 2,
+        fontSize + padding
+      );
+
+      // Text
       ctx.strokeStyle = '#000000';
       ctx.lineWidth = 4;
-      ctx.strokeText(text, radius - 20, 0);
+      ctx.strokeText(text, textX, 0);
       ctx.fillStyle = '#f5e6c8';
-      ctx.fillText(text, radius - 20, 0);
+      ctx.fillText(text, textX, 0);
 
       ctx.restore();
     }
 
-    // Center circle
+    // Center
     ctx.beginPath();
     ctx.arc(0, 0, 46, 0, Math.PI * 2);
     ctx.fillStyle = '#8b6914';
@@ -132,7 +142,7 @@ export async function generateWheelGIF(choices, options = {}) {
 
     ctx.restore();
 
-    // Pointer (top)
+    // Pointer
     ctx.beginPath();
     ctx.moveTo(centerX, 12);
     ctx.lineTo(centerX - 14, 48);
@@ -156,7 +166,6 @@ export async function generateWheelGIF(choices, options = {}) {
     encoder.addFrame(ctx);
   }
 
-  // Hold last frame
   for (let i = 0; i < fps; i++) {
     encoder.addFrame(ctx);
   }
